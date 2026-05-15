@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: ripple-postgres
+    environment:
+      POSTGRES_USER: ripple
+      POSTGRES_PASSWORD: ripple
+      POSTGRES_DB: ripple
+    ports:
+      - "5433:5432"
+    volumes:
+      - ripple-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  ripple-postgres-data:

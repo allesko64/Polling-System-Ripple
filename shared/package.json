@@ -1,0 +1,13 @@
+{
+  "name": "@ripple/shared",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "~5.0.0"
+  }
+}
