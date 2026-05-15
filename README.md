@@ -78,7 +78,7 @@ pnpm install
 ```
 
 **`server/.env`** — `PORT`, `CLIENT_URL`, `DATABASE_URL`, `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`  
-**`client/.env`** — `VITE_API_BASE_URL=http://localhost:8080/api`
+**`client/.env`** — `VITE_API_BASE_URL`, `VITE_SOCKET_URL` (Socket.io origin, no `/api`)
 
 ```bash
 cd server && pnpm exec drizzle-kit migrate && pnpm seed   # optional seed

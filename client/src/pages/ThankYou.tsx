@@ -1,12 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { io, Socket } from 'socket.io-client'
+import type { Socket } from 'socket.io-client'
 import api from '../lib/api'
 import { getVisitorId } from '../lib/fingerprint'
-
-const socketUrl =
-  import.meta.env.VITE_SOCKET_URL ||
-  (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api').replace(/\/api\/?$/, '')
+import { createSocket } from '../lib/socket'
 
 interface StatsData {
   totalResponses: number
@@ -49,7 +46,7 @@ export default function ThankYou() {
     void fetchStats()
     setTimeout(() => { if (mountedRef.current) setBarsVisible(true) }, 600)
 
-    const socket = io(socketUrl, { withCredentials: true })
+    const socket = createSocket()
     socketRef.current = socket
 
     socket.on('connect', () => socket.emit('join:thankyou', pollId))

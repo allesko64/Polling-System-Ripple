@@ -3,11 +3,7 @@ import { useParams, useNavigate, Link, Navigate } from 'react-router-dom'
 import api from '../lib/api'
 import { toast } from 'react-hot-toast'
 import { getVisitorId } from '../lib/fingerprint'
-import { io } from 'socket.io-client'
-
-const socketUrl =
-  import.meta.env.VITE_SOCKET_URL ||
-  (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api').replace(/\/api\/?$/, '')
+import { createSocket } from '../lib/socket'
 
 interface Option {
   id: string
@@ -66,7 +62,7 @@ export default function PollPage() {
   }
 
     void fetchPoll()
-    const socket = io(socketUrl, { withCredentials: true })
+    const socket = createSocket()
     socket.on('connect', () => socket.emit('join:poll', pollId))
     socket.on('poll:status_changed', ({ status }) => {
     if (status === 'closed') {

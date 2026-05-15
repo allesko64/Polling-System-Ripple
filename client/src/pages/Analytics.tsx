@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { io, Socket } from 'socket.io-client'
+import type { Socket } from 'socket.io-client'
 import Sidebar from '../components/Sidebar'
 import api from '../lib/api'
 import toast from 'react-hot-toast'
 import { useAuthStore } from '../lib/store'
+import { createSocket } from '../lib/socket'
 
 interface AnalyticsData {
   totalResponses: number
@@ -85,10 +86,6 @@ export default function Analytics() {
   const mountedRef = useRef(true)
   const accessToken = useAuthStore((s) => s.accessToken)
 
-  const socketUrl =
-    import.meta.env.VITE_SOCKET_URL ||
-    (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api').replace(/\/api\/?$/, '')
-
   useEffect(() => {
     mountedRef.current = true
 
@@ -117,7 +114,7 @@ export default function Analytics() {
 
     void loadAnalytics()
 
-    const socket = io(socketUrl, { withCredentials: true })
+    const socket = createSocket()
     socketRef.current = socket
 
     const onResponseEvent = (_payload: { totalResponses?: number; pollId?: string }) => {
@@ -141,7 +138,7 @@ export default function Analytics() {
       socket.off('poll:response_received', onResponseEvent)
       socket.disconnect()
     }
-  }, [pollId, socketUrl, accessToken])
+  }, [pollId, accessToken])
   const maxTimeline = data?.timeline.length
     ? Math.max(...data.timeline.map(t => Number(t.count)))
     : 1
