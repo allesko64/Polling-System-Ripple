@@ -4,6 +4,15 @@
 
 React + Express + **PostgreSQL** + **Socket.io**. pnpm monorepo (`client` / `server` / `shared`).
 
+## Live deployment
+
+| | URL |
+|---|-----|
+| **WebSite** | `https://renewed-growth-production-d4e5.up.railway.app/` |
+
+
+
+
 ---
 
 ## What goes beyond a simple poll app

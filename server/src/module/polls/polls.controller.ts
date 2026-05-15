@@ -132,6 +132,15 @@ export async function getAnalytics(req: Request, res: Response, next: NextFuncti
     }
 }
 
+export async function getPublicPollFeed(req: Request, res: Response, next: NextFunction) {
+    try {
+        const feed = await pollsService.getPublicPollFeed()
+        res.status(200).json(feed)
+    } catch (error) {
+        next(error)
+    }
+}
+
 export async function deletePoll(req: Request, res: Response, next: NextFunction) {
   try {
     const pollId = req.params.pollId as string

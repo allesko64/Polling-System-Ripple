@@ -1,6 +1,6 @@
 import { db } from "../../db/index";
 import {polls , questions , options, responses , answers as answersTable} from "../../db/schema"
-import { eq  , count, inArray , and, sql} from "drizzle-orm";
+import { eq  , count, inArray , and, sql, or, gt} from "drizzle-orm";
 import { ApiError } from "../../common/errors";
 import { getIO } from "../../common/socket";
 
@@ -77,6 +77,39 @@ export class PollsService {
             throw error
         }
     }
+    async getPublicPollFeed() {
+        try {
+            const feed = await db
+                .select({
+                    id: polls.id,
+                    title: polls.title,
+                    description: polls.description,
+                    expiresAt: polls.expiresAt,
+                    status: polls.status,
+                    responseCount: count(responses.id),
+                })
+                .from(polls)
+                .leftJoin(responses, eq(responses.pollId, polls.id))
+                .where(
+                    or(
+                        and(eq(polls.status, 'active'), gt(polls.expiresAt, sql`NOW()`)),
+                        eq(polls.status, 'published')
+                    )
+                )
+                .groupBy(polls.id)
+                .orderBy(
+                    sql`CASE ${polls.status} WHEN 'active' THEN 0 WHEN 'published' THEN 1 END`,
+                    sql`CASE WHEN ${polls.status} = 'active' THEN ${polls.expiresAt} END ASC`,
+                    sql`CASE WHEN ${polls.status} = 'published' THEN ${polls.expiresAt} END DESC`
+                )
+
+            return feed
+        } catch (error) {
+            console.error('Error fetching public poll feed:', error)
+            throw error
+        }
+    }
+
     private async getQuestionsWithOptions(pollId: string) {
         const questionsData = await db.select().from(questions)
         .where(eq(questions.pollId, pollId))
