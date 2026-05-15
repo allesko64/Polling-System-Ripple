@@ -8,7 +8,7 @@ React + Express + **PostgreSQL** + **Socket.io**. pnpm monorepo (`client` / `ser
 
 | | URL |
 |---|-----|
-| **WebSite** | `https://renewed-growth-production-d4e5.up.railway.app/` |
+| **WebSite** | [renewed-growth-production-d4e5.up.railway.app](https://renewed-growth-production-d4e5.up.railway.app/) |
 
 
 
